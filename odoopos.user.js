@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Odoo Storage Sync
 // @namespace    http://tampermonkey.net/
-// @version      1.01
+// @version      1.02
 // @description  Save localstorage data fo later import.
 // @author       Eslam Tiffa
 // @match        *://*/web*
@@ -26,16 +26,20 @@
 
 (function() {
     'use strict';
-    GM_setValue("xxx", 'True');
     setTimeout(() => {
         var store_orders_key, store_unpaid_key, store_orders, store_unpaid, stored_orders, stored_unpaid, stored_ip;
         var current_ip = document.domain;
-        stored_ip = GM_getValue("stored_ip", current_ip);
+        stored_ip = GM_getValue("stored_ip", null);
         console.log(current_ip, stored_ip)
         stored_orders = GM_getValue("stored_orders", null);
         stored_unpaid = GM_getValue("stored_unpaid", null);
         store_orders_key = GM_getValue("store_orders_key", null);
         store_unpaid_key = GM_getValue("store_unpaid_key", null);
+
+        var ids = Object.keys(unsafeWindow.localStorage).filter(x => x.endsWith('_pos_session_id'));
+        ids = ids[0].replace('_pos_session_id','');
+        store_orders_key = ids+"_orders";
+        store_unpaid_key = ids+"_unpaid_orders";
 
         const checkip = setInterval(ipchecker, 1000);
 
@@ -65,11 +69,11 @@
             stored_orders = GM_getValue("stored_orders", null);
             stored_unpaid = GM_getValue("stored_unpaid", null);
             Object.keys(unsafeWindow.localStorage).forEach(key => {
-                if (key.includes("c_orders")) {
+                if (key == store_orders_key) {
                     GM_setValue("store_orders_key", key);
                     store_orders = unsafeWindow.localStorage.getItem(key);
                 }
-                if (key.includes("c_unpaid_orders")) {
+                if (key == store_unpaid_key) {
                     GM_setValue("store_unpaid_key", key);
                     store_unpaid = unsafeWindow.localStorage.getItem(key);
                 }
