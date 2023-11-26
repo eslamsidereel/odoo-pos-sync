@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Odoo Storage Sync
 // @namespace    http://tampermonkey.net/
-// @version      1
+// @version      1.0
 // @description  Save localstorage data fo later import.
 // @author       Eslam Tiffa
 // @match        *://*/web*
@@ -26,6 +26,7 @@
 
 (function() {
     'use strict';
+    GM_setValue("xxx", 'True');
     setTimeout(() => {
         var store_orders_key, store_unpaid_key, store_orders, store_unpaid, stored_orders, stored_unpaid, stored_ip;
         var current_ip = document.domain;
