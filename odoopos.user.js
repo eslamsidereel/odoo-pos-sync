@@ -20,6 +20,8 @@
 // @grant        GM.xmlHttpRequest
 // @grant        GM_download
 // @run-at       document-start
+// @downloadURL       https://github.com/eslamsidereel/odoo-pos-sync/raw/main/odoopos.user.js
+// @updateURL       https://github.com/eslamsidereel/odoo-pos-sync/raw/main/odoopos.user.js
 // ==/UserScript==
 
 (function() {
