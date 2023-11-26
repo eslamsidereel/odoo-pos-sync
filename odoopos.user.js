@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Odoo Storage Sync
 // @namespace    http://tampermonkey.net/
-// @version      0.7
+// @version      0.8
 // @description  Save localstorage data fo later import.
 // @author       Eslam Tiffa
 // @match        *://*/web*
@@ -44,14 +44,20 @@
             } else {
                 if (stored_orders !== null) {
                     if (store_orders_key) {
-                        console.log(store_orders_key)
                         unsafeWindow.localStorage.setItem(store_orders_key, stored_orders);
+                    }
+                } else {
+                    if (store_orders_key) {
+                        unsafeWindow.localStorage.setItem(store_orders_key, '[]');
                     }
                 }
                 if (stored_unpaid !== null) {
                     if (store_unpaid_key) {
-                        console.log(store_unpaid_key)
                         unsafeWindow.localStorage.setItem(store_unpaid_key, stored_unpaid);
+                    }
+                } else {
+                    if (store_unpaid_key) {
+                        unsafeWindow.localStorage.setItem(store_unpaid_key, '[]');
                     }
                 }
                 GM_setValue("stored_ip", current_ip);
