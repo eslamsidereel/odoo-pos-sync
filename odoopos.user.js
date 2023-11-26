@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Odoo Storage Sync
 // @namespace    http://tampermonkey.net/
-// @version      0.4
+// @version      0.5
 // @description  Save localstorage data fo later import.
 // @author       Eslam Tiffa
 // @match        *://*/web*
@@ -76,7 +76,6 @@
                     store_orders = unsafeWindow.localStorage.getItem(key);
                 }
                 if (key.includes("c_unpaid_orders")) {
-                    store_unpaid_key = key;
                     store_unpaid = unsafeWindow.localStorage.getItem(key);
                 }
             });
@@ -94,11 +93,29 @@
                     }
                 }
                 if (store_unpaid) {
-                    if (!(stored_unpaid == store_unpaid)) {
-                        var data = JSON.parse(store_unpaid);
-                        if (data.length > 1) {
-                            data.forEach(function (i) {
-                                if (i.data.lines.length > 0) {
+                    if (store_unpaid == '[]') {
+                        if (stored_unpaid !== null) {
+                            GM_setValue("stored_unpaid", null);
+                            console.log('updated')
+                        }
+                    } else {
+                        if (!(stored_unpaid == store_unpaid)) {
+                            var data = JSON.parse(store_unpaid);
+                            if (data.length > 1) {
+                                data.forEach(function (i) {
+                                    if (i.data.lines.length > 0) {
+                                        GM_setValue("stored_unpaid", store_unpaid);
+                                        console.log('updated')
+                                    } else {
+                                        if (stored_unpaid) {
+                                            GM_setValue("stored_unpaid", null);
+                                            console.log('updated')
+                                        }
+
+                                    }
+                                });
+                            } else {
+                                if (data[0].data.lines.length > 0) {
                                     GM_setValue("stored_unpaid", store_unpaid);
                                     console.log('updated')
                                 } else {
@@ -106,17 +123,6 @@
                                         GM_setValue("stored_unpaid", null);
                                         console.log('updated')
                                     }
-
-                                }
-                            });
-                        } else {
-                            if (data[0].data.lines.length > 0) {
-                                GM_setValue("stored_unpaid", store_unpaid);
-                                console.log('updated')
-                            } else {
-                                if (stored_unpaid) {
-                                    GM_setValue("stored_unpaid", null);
-                                    console.log('updated')
                                 }
                             }
                         }
