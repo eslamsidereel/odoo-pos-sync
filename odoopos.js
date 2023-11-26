@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Odoo Storage Sync
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      0.2
 // @description  Save localstorage data fo later import.
 // @author       Eslam Tiffa
 // @match        *://*/web*
