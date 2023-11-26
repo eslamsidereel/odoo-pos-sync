@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Odoo Storage Sync
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  Save localstorage data fo later import.
 // @author       Eslam Tiffa
 // @match        *://*/web*
@@ -83,7 +83,10 @@
 
             if (stored_ip == current_ip) {
                 if (store_orders) {
-                    if (!(store_orders == stored_orders)) {
+                    if (store_orders == '[]') {
+                        GM_setValue("stored_orders", null);
+                        console.log('updated')
+                    } else {
                         GM_setValue("stored_orders", store_orders);
                         console.log('updated')
                     }
