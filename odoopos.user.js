@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Odoo Storage Sync
 // @namespace    http://tampermonkey.net/
-// @version      1.04
+// @version      1.05
 // @description  Save localstorage data fo later import.
 // @author       Eslam Tiffa
 // @match        *://*/web*
@@ -35,33 +35,35 @@
             stored_orders = GM_getValue("stored_orders", null);
             stored_unpaid = GM_getValue("stored_unpaid", null);
 
-            var ids = Object.keys(unsafeWindow.localStorage).filter(x => x.endsWith('_pos_session_id'));
-            ids = ids[0].replace('_pos_session_id','');
-            store_orders_key = ids+"_orders";
-            store_unpaid_key = ids+"_unpaid_orders";
-
-            GM_setValue("store_orders_key", store_orders_key);
-            GM_setValue("store_unpaid_key", store_unpaid_key);
-
             const checkip = setInterval(ipchecker, 1000);
 
             async function ipchecker() {
-                if (stored_ip == current_ip) {
-                    clearInterval(checkip);
-                } else {
-                    if (stored_orders !== null) {
-                        if (store_orders_key) {
-                            unsafeWindow.localStorage.setItem(store_orders_key, stored_orders);
+                var ids = Object.keys(unsafeWindow.localStorage).filter(x => x.endsWith('_pos_session_id'));
+                if (ids.length > 0) {
+                    ids = ids[0].replace('_pos_session_id','');
+                    store_orders_key = ids+"_orders";
+                    store_unpaid_key = ids+"_unpaid_orders";
+
+                    GM_setValue("store_orders_key", store_orders_key);
+                    GM_setValue("store_unpaid_key", store_unpaid_key);
+
+                    if (stored_ip == current_ip) {
+                        clearInterval(checkip);
+                    } else {
+                        if (stored_orders !== null) {
+                            if (store_orders_key) {
+                                unsafeWindow.localStorage.setItem(store_orders_key, stored_orders);
+                            }
                         }
-                    }
-                    if (stored_unpaid !== null) {
-                        if (store_unpaid_key) {
-                            unsafeWindow.localStorage.setItem(store_unpaid_key, stored_unpaid);
+                        if (stored_unpaid !== null) {
+                            if (store_unpaid_key) {
+                                unsafeWindow.localStorage.setItem(store_unpaid_key, stored_unpaid);
+                            }
                         }
+                        GM_setValue("stored_ip", current_ip);
+                        window.location.reload(true);
+                        clearInterval(checkip);
                     }
-                    GM_setValue("stored_ip", current_ip);
-                    window.location.reload(true);
-                    clearInterval(checkip);
                 }
             }
 
