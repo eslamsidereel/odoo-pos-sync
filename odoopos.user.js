@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         Odoo Storage Sync
 // @namespace    http://tampermonkey.net/
-// @version      1.05
+// @version      1.06
 // @description  Save localstorage data fo later import.
 // @author       Eslam Tiffa
 // @match        *://*/web*
 // @match        *://*/pos*
 // @connect      *
+// @grant        window.close
 // @grant        unsafeWindow
 // @grant        GM_openInTab
 // @grant        GM.openInTab
@@ -136,5 +137,13 @@
                 }, 1000);
             }
         }, "5000");
+        if (window.location.href.indexOf("action=bank_statement_reconciliation_view") > -1) {
+            setInterval(async () => {
+                let check_lines = document.getElementsByClassName('o_view_noreconciliation');
+                if (check_lines) {
+                    window.close();
+                }
+            }, 3000);
+        }
     });
 })();
